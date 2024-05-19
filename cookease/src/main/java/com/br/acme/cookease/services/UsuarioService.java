@@ -1,6 +1,6 @@
 package com.br.acme.cookease.services;
 
-import com.br.acme.cookease.execption.ResourceNotFoundException;
+import com.br.acme.cookease.exception.ResourceNotFoundException;
 import com.br.acme.cookease.model.Usuario;
 import org.springframework.stereotype.Service;
 
