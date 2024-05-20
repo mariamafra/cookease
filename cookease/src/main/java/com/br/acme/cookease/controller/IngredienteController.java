@@ -2,8 +2,15 @@ package com.br.acme.cookease.controller;
 
 import com.br.acme.cookease.exception.ResourceNotFoundException;
 import com.br.acme.cookease.model.Ingrediente;
+import com.br.acme.cookease.model.Receita;
+import com.br.acme.cookease.model.Usuario;
 import com.br.acme.cookease.payload.MessagePayload;
 import com.br.acme.cookease.services.IngredienteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,16 +24,23 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/ingrediente")
 public class IngredienteController {
-    Logger logger = LoggerFactory.getLogger(IngredienteController.class);
     final IngredienteService ingredienteService;
 
     public IngredienteController(IngredienteService ingredienteService) {
         this.ingredienteService = ingredienteService;
     }
 
+    @Operation(summary = "Obtém todos os ingredientes ou filtra por nome")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ingredientes encontrados",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Ingrediente[].class))}),
+            @ApiResponse(responseCode = "404", description = "Nenhum ingrediente encontrado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Map.class))})
+    })
     @GetMapping
     public ResponseEntity<List<Ingrediente>> getAll(@RequestParam(required = false) Optional<String> nome){
-        logger.info("Listando todos os ingredientes");
         if(nome.isEmpty()){
             return ResponseEntity.ok(ingredienteService.getAll());
         } else {
@@ -39,10 +53,18 @@ public class IngredienteController {
         }
     }
 
+    @Operation(summary = "Busca um ingrediente por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ingrediente encontrado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Ingrediente.class))}),
+            @ApiResponse(responseCode = "404", description = "Ingrediente não encontrado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Map.class))})
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id){
         try {
-            logger.info("Listando um ingrediente pelo id");
             Ingrediente localizado = ingredienteService.getById(id);
             return ResponseEntity.ok(localizado);
         } catch (ResourceNotFoundException ex) {
@@ -51,16 +73,32 @@ public class IngredienteController {
         }
     }
 
+    @Operation(summary = "Cria um ingrediente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Criado com sucesso",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))}
+            )
+    })
     @PostMapping
     public ResponseEntity<MessagePayload> save(@RequestBody  Ingrediente ingrediente) {
-        logger.info("Criando um  ingrediente");
         ingredienteService.save(ingrediente);
-        return ResponseEntity.ok(new MessagePayload("Criado com sucesso"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessagePayload("Criado com sucesso"));
     }
 
+    @Operation(summary = "Atualiza um ingrediente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Atualizado com sucesso",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))}
+            ),
+            @ApiResponse(responseCode = "404", description = "Ocorreu um Erro",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))}
+            )
+    })
     @PutMapping("/{id}")
     public ResponseEntity<MessagePayload> update(@PathVariable Integer id, @RequestBody Ingrediente ingrediente) {
-        logger.info("Atualizando um ingrediente");
         try{
             ingredienteService.update(id, ingrediente);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Atualizado com sucesso"));
@@ -69,9 +107,15 @@ public class IngredienteController {
         }
     }
 
+    @Operation(summary = "Deleta um ingrediente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Deletado com sucesso",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))
+                    })
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<MessagePayload> delete(@PathVariable Integer id) {
-        logger.info("Deletando um ingrediente");
         try {
             ingredienteService.deleteById(id);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Deletado com sucesso"));

@@ -2,8 +2,14 @@ package com.br.acme.cookease.controller;
 
 import com.br.acme.cookease.exception.ResourceNotFoundException;
 import com.br.acme.cookease.model.Receita;
+import com.br.acme.cookease.model.Usuario;
 import com.br.acme.cookease.payload.MessagePayload;
 import com.br.acme.cookease.services.ReceitaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,16 +23,23 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/receita")
 public class ReceitaController {
-    Logger logger = LoggerFactory.getLogger(ReceitaController.class);
     final ReceitaService receitaService;
 
     public ReceitaController(ReceitaService receitaService) {
         this.receitaService = receitaService;
     }
 
+    @Operation(summary = "Obtém todos as receitas ou filtra por nome")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Receitas encontradas",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Receita[].class))}),
+            @ApiResponse(responseCode = "404", description = "Nenhum receita encontrada",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Map.class))})
+    })
     @GetMapping
     public ResponseEntity<List<Receita>> getAll(@RequestParam(required = false) Optional<String> nome){
-        logger.info("Listando todos os receitaS");
         if(nome.isEmpty()){
             return ResponseEntity.ok(receitaService.getAll());
         } else {
@@ -39,10 +52,18 @@ public class ReceitaController {
         }
     }
 
+    @Operation(summary = "Busca uma receita por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Receita encontrada",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Receita.class))}),
+            @ApiResponse(responseCode = "404", description = "Receita não encontrada",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Map.class))})
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id){
         try {
-            logger.info("Listando uma receita pelo id");
             Receita localizado = receitaService.getById(id);
             return ResponseEntity.ok(localizado);
         } catch (ResourceNotFoundException ex) {
@@ -51,16 +72,32 @@ public class ReceitaController {
         }
     }
 
+    @Operation(summary = "Cria uma receita")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Criado com sucesso",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))}
+            )
+    })
     @PostMapping
     public ResponseEntity<MessagePayload> save(@RequestBody Receita receita) {
-        logger.info("Criando um receita");
         receitaService.save(receita);
-        return ResponseEntity.ok(new MessagePayload("Criado com sucesso"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessagePayload("Criado com sucesso"));
     }
 
+    @Operation(summary = "Atualiza uma receita")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Atualizado com sucesso",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))}
+            ),
+            @ApiResponse(responseCode = "404", description = "Ocorreu um Erro",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))}
+            )
+    })
     @PutMapping("/{id}")
     public ResponseEntity<MessagePayload> update(@PathVariable Integer id, @RequestBody Receita receita) {
-        logger.info("Atualizando um receita");
         try{
             receitaService.update(id, receita);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Atualizado com sucesso"));
@@ -69,9 +106,15 @@ public class ReceitaController {
         }
     }
 
+    @Operation(summary = "Deleta uma receita")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Deletado com sucesso",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))
+                    })
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<MessagePayload> delete(@PathVariable Integer id) {
-        logger.info("Deletando um receita");
         try {
             receitaService.deleteById(id);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Deletado com sucesso"));

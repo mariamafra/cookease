@@ -4,6 +4,11 @@ import com.br.acme.cookease.exception.ResourceNotFoundException;
 import com.br.acme.cookease.model.Usuario;
 import com.br.acme.cookease.payload.MessagePayload;
 import com.br.acme.cookease.services.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,15 +22,22 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
-    Logger logger = LoggerFactory.getLogger(UsuarioController.class);
     final UsuarioService usuarioService;
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 
+    @Operation(summary = "Obtém todos os usuários ou filtra por nome")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuários encontrados",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Usuario[].class))}),
+            @ApiResponse(responseCode = "404", description = "Nenhum usuário encontrado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Map.class))})
+    })
     @GetMapping
     public ResponseEntity<List<Usuario>> getAll(@RequestParam(required = false) Optional<String> nome){
-        logger.info("Listando todos os usuarios");
         if(nome.isEmpty()){
             return ResponseEntity.ok(usuarioService.getAll());
         } else {
@@ -38,10 +50,18 @@ public class UsuarioController {
         }
     }
 
+    @Operation(summary = "Busca um usuário por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário encontrado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Usuario.class))}),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Map.class))})
+    })
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id){
         try {
-            logger.info("Listando um usuario pelo id");
             Usuario localizado = usuarioService.getById(id);
             return ResponseEntity.ok(localizado);
         } catch (ResourceNotFoundException ex) {
@@ -50,16 +70,32 @@ public class UsuarioController {
         }
     }
 
+    @Operation(summary = "Cria um usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Criado com sucesso",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))}
+            )
+    })
     @PostMapping
     public ResponseEntity<MessagePayload> save(@RequestBody Usuario usuario) {
-        logger.info("Criando um usuario");
         usuarioService.save(usuario);
-        return ResponseEntity.ok(new MessagePayload("Criado com sucesso"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessagePayload("Criado com sucesso"));
     }
 
+    @Operation(summary = "Atualiza um usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Atualizado com sucesso",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))}
+            ),
+            @ApiResponse(responseCode = "404", description = "Ocorreu um Erro",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MessagePayload.class))}
+            )
+    })
     @PutMapping("/{id}")
     public ResponseEntity<MessagePayload> update(@PathVariable Integer id, @RequestBody Usuario usuario) {
-        logger.info("Atualizando um usuario");
         try{
             usuarioService.update(id, usuario);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Atualizado com sucesso"));
@@ -68,16 +104,15 @@ public class UsuarioController {
         }
     }
 
-    /*@Operation(summary = "Deleta uma usuário")
+    @Operation(summary = "Deleta um usuário")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Deletado com sucesso",
             content = {@Content(mediaType = "application/json",
             schema = @Schema(implementation = MessagePayload.class))
             })
-    })*/
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<MessagePayload> delete(@PathVariable Integer id) {
-        logger.info("Deletando um usuario");
         try {
             usuarioService.deleteById(id);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Deletado com sucesso"));
