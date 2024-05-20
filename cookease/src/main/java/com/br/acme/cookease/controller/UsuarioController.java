@@ -105,11 +105,15 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Deleta um usuário")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Deletado com sucesso",
-            content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = MessagePayload.class))
-            })
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "202", description = "Deletado com sucesso",
+                content = {@Content(mediaType = "application/json",
+                schema = @Schema(implementation = MessagePayload.class))
+                }),
+                @ApiResponse(responseCode = "404", description = "Ocorreu um Erro",
+                        content = {@Content(mediaType = "application/json",
+                                schema = @Schema(implementation = MessagePayload.class))}
+                )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<MessagePayload> delete(@PathVariable Integer id) {
