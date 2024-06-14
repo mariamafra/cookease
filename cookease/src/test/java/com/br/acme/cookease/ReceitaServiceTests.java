@@ -1,5 +1,6 @@
 package com.br.acme.cookease;
 
+import com.br.acme.cookease.model.Chefe;
 import com.br.acme.cookease.model.Receita;
 import com.br.acme.cookease.services.ReceitaService;
 import org.junit.jupiter.api.DisplayName;
@@ -21,12 +22,13 @@ public class ReceitaServiceTests {
     @Test
     @DisplayName("Deve inserir Receita no Banco.")
     public void testarInsert() {
+        Chefe chefe = Chefe.builder().id(1).build();
         List<Receita> all = receitaService.getAll();
         int estadoInicial = all.size();
 
         Receita receita = new Receita();
         receita.setNome("Brownie da Duda");
-//      receita.setIngredientes(); VOLTAR AQUI
+        receita.setChefe(chefe);
         receitaService.save(receita);
 
         all = receitaService.getAll();
@@ -38,8 +40,10 @@ public class ReceitaServiceTests {
     @Test
     @DisplayName("Deve deletar um Receita do Banco.")
     public void testarDelete() {
+        Chefe chefe = Chefe.builder().id(1).build();
         Receita receita = new Receita();
         receita.setNome("Brownie da Duda");
+        receita.setChefe(chefe);
         receitaService.save(receita);
 
         List<Receita> all = receitaService.getAll();
@@ -56,8 +60,10 @@ public class ReceitaServiceTests {
     @Test
     @DisplayName("Deve retornar uma cerveja pelo ID")
     public void testarGetById() {
+        Chefe chefe = Chefe.builder().id(1).build();
         Receita receita = new Receita();
         receita.setNome("Brownie da Duda");
+        receita.setChefe(chefe);
         receitaService.save(receita);
 
         List<Receita> all = receitaService.getAll();
