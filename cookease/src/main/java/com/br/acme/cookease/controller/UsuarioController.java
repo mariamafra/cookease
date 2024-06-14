@@ -1,7 +1,7 @@
 package com.br.acme.cookease.controller;
 
 import com.br.acme.cookease.exception.ResourceNotFoundException;
-import com.br.acme.cookease.model.Usuario;
+import com.br.acme.cookease.model.Chefe;
 import com.br.acme.cookease.payload.MessagePayload;
 import com.br.acme.cookease.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,8 +9,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,17 +29,17 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuários encontrados",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Usuario[].class))}),
+                            schema = @Schema(implementation = Chefe[].class))}),
             @ApiResponse(responseCode = "404", description = "Nenhum usuário encontrado",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Map.class))})
     })
     @GetMapping
-    public ResponseEntity<List<Usuario>> getAll(@RequestParam(required = false) Optional<String> nome){
+    public ResponseEntity<List<Chefe>> getAll(@RequestParam(required = false) Optional<String> nome){
         if(nome.isEmpty()){
             return ResponseEntity.ok(usuarioService.getAll());
         } else {
-            List<Usuario> usuarios = usuarioService.filterByName(nome.get());
+            List<Chefe> usuarios = usuarioService.filterByName(nome.get());
             if(usuarios.isEmpty()){
                 return ResponseEntity.notFound().build();
             } else {
@@ -54,7 +52,7 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Usuario.class))}),
+                            schema = @Schema(implementation = Chefe.class))}),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Map.class))})
@@ -62,7 +60,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id){
         try {
-            Usuario localizado = usuarioService.getById(id);
+            Chefe localizado = usuarioService.getById(id);
             return ResponseEntity.ok(localizado);
         } catch (ResourceNotFoundException ex) {
             Map<String, String> message = Map.of("Message", ex.getMessage());
@@ -78,7 +76,7 @@ public class UsuarioController {
             )
     })
     @PostMapping
-    public ResponseEntity<MessagePayload> save(@RequestBody Usuario usuario) {
+    public ResponseEntity<MessagePayload> save(@RequestBody Chefe usuario) {
         usuarioService.save(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessagePayload("Criado com sucesso"));
     }
@@ -95,7 +93,7 @@ public class UsuarioController {
             )
     })
     @PutMapping("/{id}")
-    public ResponseEntity<MessagePayload> update(@PathVariable Integer id, @RequestBody Usuario usuario) {
+    public ResponseEntity<MessagePayload> update(@PathVariable Integer id, @RequestBody Chefe usuario) {
         try{
             usuarioService.update(id, usuario);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Atualizado com sucesso"));
