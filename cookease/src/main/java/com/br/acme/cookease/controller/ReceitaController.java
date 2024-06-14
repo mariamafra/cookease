@@ -3,12 +3,13 @@ package com.br.acme.cookease.controller;
 import com.br.acme.cookease.exception.ResourceNotFoundException;
 import com.br.acme.cookease.model.Receita;
 import com.br.acme.cookease.payload.MessagePayload;
-import com.br.acme.cookease.services.ReceitaServiceOld;
+import com.br.acme.cookease.services.ReceitaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +20,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/receita")
+@RequiredArgsConstructor
 public class ReceitaController {
-    final ReceitaServiceOld receitaService;
-
-    public ReceitaController(ReceitaServiceOld receitaService) {
-        this.receitaService = receitaService;
-    }
+    final ReceitaService receitaService;
 
     @Operation(summary = "Obtém todos as receitas ou filtra por nome")
     @ApiResponses(value = {
@@ -40,7 +38,7 @@ public class ReceitaController {
         if(nome.isEmpty()){
             return ResponseEntity.ok(receitaService.getAll());
         } else {
-            List<Receita> receitas = receitaService.filterByName(nome.get());
+            List<Receita> receitas = receitaService.getAllByNome(nome.get());
             if(receitas.isEmpty()){
                 return ResponseEntity.notFound().build();
             } else {
@@ -61,8 +59,9 @@ public class ReceitaController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id){
         try {
-            Receita localizado = receitaService.getById(id);
-            return ResponseEntity.ok(localizado);
+            Optional<Receita> receita = receitaService.findById(id);
+            return receita.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (ResourceNotFoundException ex) {
             Map<String, String> message = Map.of("Message", ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);

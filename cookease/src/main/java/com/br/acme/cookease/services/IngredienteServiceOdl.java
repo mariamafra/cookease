@@ -13,8 +13,8 @@ public class IngredienteServiceOdl {
     List<Ingrediente> ingredientes = initValues();
     private List<Ingrediente> initValues() {
         ArrayList<Ingrediente> ingredientes1 = new ArrayList<>();
-        ingredientes1.add(new Ingrediente(0, "Cebola", 8.38));
-        ingredientes1.add(new Ingrediente(1, "Milho", 1.22));
+//        ingredientes1.add(new Ingrediente(0, "Cebola", 8.38));
+//        ingredientes1.add(new Ingrediente(1, "Milho", 1.22));
         return ingredientes1;
     }
 

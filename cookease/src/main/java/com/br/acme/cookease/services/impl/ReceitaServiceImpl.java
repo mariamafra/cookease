@@ -29,12 +29,17 @@ public class ReceitaServiceImpl implements ReceitaService {
     }
 
     @Override
+    public List<Receita> getAllByNome(String nome) {
+        return receitaRepository.findAllByNome(nome);
+    }
+
+    @Override
     public Optional<Receita> findById(Integer id) {
         return receitaRepository.findById(id);
     }
 
     @Override
-    public void deleById(Integer id) {
+    public void deleteById(Integer id) {
         receitaRepository.deleteById(id);
     }
 

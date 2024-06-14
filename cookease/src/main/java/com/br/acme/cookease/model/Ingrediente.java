@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -18,4 +20,6 @@ public class Ingrediente {
     private int id;
     private String nome;
     private double preco;
+    @ManyToMany(fetch = FetchType.EAGER)
+    List<Receita> receitas;
 }
