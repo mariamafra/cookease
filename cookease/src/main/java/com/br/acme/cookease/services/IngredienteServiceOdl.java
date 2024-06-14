@@ -26,7 +26,7 @@ public class IngredienteServiceOdl {
         if(id < 0){
             throw new ResourceNotFoundException("Valor inválido - Não pode ser negativo");
         } else {
-            Optional<Ingrediente> ingredienteOpt = ingredientes.stream().filter(ingrediente -> ingrediente.getCodigo() == id).findFirst();
+            Optional<Ingrediente> ingredienteOpt = ingredientes.stream().filter(ingrediente -> ingrediente.getId() == id).findFirst();
             if(ingredienteOpt.isEmpty()) throw  new ResourceNotFoundException("Objeto não encontrado");
             return ingredienteOpt.get();
         }
@@ -56,6 +56,6 @@ public class IngredienteServiceOdl {
     }
 
     private boolean resourceNotFound(Integer id) {
-        return ingredientes.stream().filter(ingrediente -> ingrediente.getCodigo() == id).findFirst().isEmpty();
+        return ingredientes.stream().filter(ingrediente -> ingrediente.getId() == id).findFirst().isEmpty();
     }
 }

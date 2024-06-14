@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -14,7 +12,7 @@ import java.util.List;
 public class Ingrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int codigo;
+    private int id;
     private String nome;
     private double preco;
 //    @ManyToMany/*(cascade = CascateType.ALL)*/
