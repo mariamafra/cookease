@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface ReceitaService {
     List<Receita> getAll();
+    List<Receita> getAll(int page, int size, boolean asc);
     Optional<Receita> findById(Integer id);
     void deleById(Integer id);
     void save(Receita receita);

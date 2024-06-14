@@ -24,6 +24,16 @@ public class ChefeServiceImpl implements ChefeService {
     }
 
     @Override
+    public List<Chefe> getAllByName(String nome) {
+        return chefeRepository.findAllByNome(nome);
+    }
+
+    @Override
+    public List<Chefe> getAllByNameContains(String nome) {
+        return chefeRepository.findAllByNomeContains(nome);
+    }
+
+    @Override
     public void deleById(Integer id) {
         chefeRepository.deleteById(id);
     }

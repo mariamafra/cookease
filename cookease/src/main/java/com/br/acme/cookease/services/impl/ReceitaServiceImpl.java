@@ -4,6 +4,8 @@ import com.br.acme.cookease.model.Receita;
 import com.br.acme.cookease.repository.ReceitaRepository;
 import com.br.acme.cookease.services.ReceitaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,13 @@ public class ReceitaServiceImpl implements ReceitaService {
     @Override
     public List<Receita> getAll() {
         return receitaRepository.findAll();
+    }
+
+    @Override
+    public List<Receita> getAll(int page, int size, boolean asc) {
+        Sort order = asc ? Sort.by("nome").ascending() : Sort.by("nome").descending();
+        PageRequest pageRequest = PageRequest.of(page, size, order);
+        return receitaRepository.findAll(pageRequest).stream().toList();
     }
 
     @Override
