@@ -33,4 +33,14 @@ public class ChefeServiceTests {
         Optional<Chefe> inexistente = chefeService.findById(-1);
         assertTrue(inexistente.isEmpty());
     }
+
+    @Test
+    @DisplayName("Deve buscar o chefe pelo nome")
+    public void testarGetByNome() {
+        List<Chefe> result = chefeService.getAllByName("Duda");
+        assertEquals(2, result.size());
+
+        List<Chefe> resultContain = chefeService.getAllByNameContains("a");
+        assertEquals(4, resultContain.size());
+    }
 }
