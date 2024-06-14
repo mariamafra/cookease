@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class ReceitaServiceTest {
@@ -51,4 +53,19 @@ public class ReceitaServiceTest {
         assertEquals(estadoFinal, estadoInicial - 1);
     }
 
+    @Test
+    @DisplayName("Deve retornar uma cerveja pelo ID")
+    public void testarGetById() {
+        Receita receita = new Receita();
+        receita.setNome("Brownie da Duda");
+        receitaService.save(receita);
+
+        List<Receita> all = receitaService.getAll();
+        Receita receita2 = all.get(0);
+        Optional<Receita> byId = receitaService.findById(receita2.getId());
+        assertTrue(byId.isPresent());
+
+        Optional<Receita> inexistente = receitaService.findById(-1);
+        assertTrue(inexistente.isEmpty());
+    }
 }
