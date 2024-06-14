@@ -11,15 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Entity
+@Table(name = "INGREDIENTES")
 public class Ingrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
     private double preco;
-//    @ManyToMany/*(cascade = CascateType.ALL)*/
-//    @JoinTable(name = "ingrediente_receitas",
-//            joinColumns = @JoinColumn(name = "ingredient_id"),
-//            inverseJoinColumns = @JoinColumn( name = "receita_id"))
-//    private List<Receita> receitas;
 }

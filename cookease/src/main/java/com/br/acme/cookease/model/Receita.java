@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @Builder
 @Entity
+@Table(name = "RECEITAS")
 public class Receita {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +22,6 @@ public class Receita {
     @ManyToOne
     @JoinColumn(name = "chefe_id")
     private Chefe chefe;
-//    @ManyToMany(mappedBy = "receitas")
-//    private List<Ingrediente> ingredientes;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Ingrediente> ingredientes;
 }
