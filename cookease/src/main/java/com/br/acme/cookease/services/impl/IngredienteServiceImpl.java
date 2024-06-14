@@ -25,7 +25,12 @@ public class IngredienteServiceImpl implements IngredienteService {
     }
 
     @Override
-    public void deleById(Integer id) {
+    public List<Ingrediente> getAllByNome(String nome) {
+        return ingredienteRepository.findAllByNome(nome);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
         ingredienteRepository.deleteById(id);
     }
 

@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface IngredienteRepository extends JpaRepository<Ingrediente, Integer> {
+    List<Ingrediente> findAllByNome(String nome);
 //    List<Ingrediente> findAllByReceitaId(Receita receita);
 }

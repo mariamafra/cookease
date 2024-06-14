@@ -3,12 +3,13 @@ package com.br.acme.cookease.controller;
 import com.br.acme.cookease.exception.ResourceNotFoundException;
 import com.br.acme.cookease.model.Ingrediente;
 import com.br.acme.cookease.payload.MessagePayload;
-import com.br.acme.cookease.services.IngredienteServiceOdl;
+import com.br.acme.cookease.services.IngredienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +20,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/ingrediente")
+@RequiredArgsConstructor
 public class IngredienteController {
-    final IngredienteServiceOdl ingredienteService;
-
-    public IngredienteController(IngredienteServiceOdl ingredienteService) {
-        this.ingredienteService = ingredienteService;
-    }
+    final IngredienteService ingredienteService;
 
     @Operation(summary = "Obtém todos os ingredientes ou filtra por nome")
     @ApiResponses(value = {
@@ -40,7 +38,7 @@ public class IngredienteController {
         if(nome.isEmpty()){
             return ResponseEntity.ok(ingredienteService.getAll());
         } else {
-            List<Ingrediente> ingrediente = ingredienteService.filterByName(nome.get());
+            List<Ingrediente> ingrediente = ingredienteService.getAllByNome(nome.get());
             if(ingrediente.isEmpty()){
                 return ResponseEntity.notFound().build();
             } else {
@@ -61,8 +59,9 @@ public class IngredienteController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id){
         try {
-            Ingrediente localizado = ingredienteService.getById(id);
-            return ResponseEntity.ok(localizado);
+            Optional<Ingrediente> localizado = ingredienteService.findById(id);
+            return localizado.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (ResourceNotFoundException ex) {
             Map<String, String> message = Map.of("Message", ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
