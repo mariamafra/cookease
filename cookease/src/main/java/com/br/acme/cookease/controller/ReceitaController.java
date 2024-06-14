@@ -2,16 +2,13 @@ package com.br.acme.cookease.controller;
 
 import com.br.acme.cookease.exception.ResourceNotFoundException;
 import com.br.acme.cookease.model.Receita;
-import com.br.acme.cookease.model.Usuario;
 import com.br.acme.cookease.payload.MessagePayload;
-import com.br.acme.cookease.services.ReceitaService;
+import com.br.acme.cookease.services.ReceitaServiceOld;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +20,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/receita")
 public class ReceitaController {
-    final ReceitaService receitaService;
+    final ReceitaServiceOld receitaService;
 
-    public ReceitaController(ReceitaService receitaService) {
+    public ReceitaController(ReceitaServiceOld receitaService) {
         this.receitaService = receitaService;
     }
 
