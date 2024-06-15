@@ -3,12 +3,13 @@ package com.br.acme.cookease.controller;
 import com.br.acme.cookease.exception.ResourceNotFoundException;
 import com.br.acme.cookease.model.Chefe;
 import com.br.acme.cookease.payload.MessagePayload;
-import com.br.acme.cookease.services.UsuarioService;
+import com.br.acme.cookease.services.ChefeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,10 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuario")
-public class UsuarioController {
-    final UsuarioService usuarioService;
-    public UsuarioController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
-    }
+@RequestMapping("/chefe")
+@RequiredArgsConstructor
+public class ChefeController {
+    final ChefeService chefeService;
 
     @Operation(summary = "Obtém todos os usuários ou filtra por nome")
     @ApiResponses(value = {
@@ -37,13 +36,13 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<List<Chefe>> getAll(@RequestParam(required = false) Optional<String> nome){
         if(nome.isEmpty()){
-            return ResponseEntity.ok(usuarioService.getAll());
+            return ResponseEntity.ok(chefeService.getAll());
         } else {
-            List<Chefe> usuarios = usuarioService.filterByName(nome.get());
-            if(usuarios.isEmpty()){
+            List<Chefe> chefes = chefeService.getAllByNameStartsWith(nome.get());
+            if(chefes.isEmpty()){
                 return ResponseEntity.notFound().build();
             } else {
-                return ResponseEntity.ok(usuarios);
+                return ResponseEntity.ok(chefes);
             }
         }
     }
@@ -60,8 +59,9 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id){
         try {
-            Chefe localizado = usuarioService.getById(id);
-            return ResponseEntity.ok(localizado);
+            Optional<Chefe> localizado = chefeService.findById(id);
+            return localizado.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (ResourceNotFoundException ex) {
             Map<String, String> message = Map.of("Message", ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
@@ -76,8 +76,8 @@ public class UsuarioController {
             )
     })
     @PostMapping
-    public ResponseEntity<MessagePayload> save(@RequestBody Chefe usuario) {
-        usuarioService.save(usuario);
+    public ResponseEntity<MessagePayload> save(@RequestBody Chefe chefe) {
+        chefeService.save(chefe);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessagePayload("Criado com sucesso"));
     }
 
@@ -93,9 +93,9 @@ public class UsuarioController {
             )
     })
     @PutMapping("/{id}")
-    public ResponseEntity<MessagePayload> update(@PathVariable Integer id, @RequestBody Chefe usuario) {
+    public ResponseEntity<MessagePayload> update(@PathVariable Integer id, @RequestBody Chefe chefe) {
         try{
-            usuarioService.update(id, usuario);
+            chefeService.update(id, chefe);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Atualizado com sucesso"));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessagePayload(ex.getMessage()));
@@ -116,7 +116,7 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<MessagePayload> delete(@PathVariable Integer id) {
         try {
-            usuarioService.deleteById(id);
+            chefeService.deleteById(id);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Deletado com sucesso"));
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessagePayload(ex.getMessage()));

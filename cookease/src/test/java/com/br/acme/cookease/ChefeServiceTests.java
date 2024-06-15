@@ -37,7 +37,7 @@ public class ChefeServiceTests {
     @Test
     @DisplayName("Deve buscar o chefe pelo nome")
     public void testarGetByNome() {
-        List<Chefe> result = chefeService.getAllByName("Duda");
+        List<Chefe> result = chefeService.getAllByNameStartsWith("Duda");
         assertEquals(2, result.size());
 
         List<Chefe> resultContain = chefeService.getAllByNameContains("a");

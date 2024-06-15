@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ChefeRepository extends JpaRepository<Chefe, Integer> {
-    List<Chefe> findAllByNome(String nome);
+    List<Chefe> findAllByNomeStartsWith(String nome);
     List<Chefe> findAllByNomeContains(String nome);
 }

@@ -24,8 +24,8 @@ public class ChefeServiceImpl implements ChefeService {
     }
 
     @Override
-    public List<Chefe> getAllByName(String nome) {
-        return chefeRepository.findAllByNome(nome);
+    public List<Chefe> getAllByNameStartsWith(String nome) {
+        return chefeRepository.findAllByNomeStartsWith(nome);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ChefeServiceImpl implements ChefeService {
     }
 
     @Override
-    public void deleById(Integer id) {
+    public void deleteById(Integer id) {
         chefeRepository.deleteById(id);
     }
 
