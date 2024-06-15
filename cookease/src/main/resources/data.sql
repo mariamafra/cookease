@@ -22,3 +22,15 @@ INSERT INTO RECEITAS_INGREDIENTES(receita_id, ingredientes_id) VALUES (4,5);
 INSERT INTO RECEITAS_INGREDIENTES(receita_id, ingredientes_id) VALUES (4,3);
 INSERT INTO RECEITAS_INGREDIENTES(receita_id, ingredientes_id) VALUES (2,1);
 
+INSERT INTO ROLE(nome) VALUES ('ADMIN');
+INSERT INTO ROLE(nome) VALUES ('USER');
+INSERT INTO ROLE(nome) VALUES ('CHEFE');
+
+INSERT INTO USUARIO(nome, email, status, password) VALUES ('Jorge', 'jorge@gmail.com', 1, '124578');
+INSERT INTO USUARIO(nome, email, status, password) VALUES ('Fabio', 'fabio@gmail.com', 2, '124578');
+INSERT INTO USUARIO(nome, email, status, password) VALUES ('Leticia', 'let@gmail.com', 1, '124578');
+
+INSERT INTO USUARIO_ROLES(usuario_id, roles_id) VALUES (1,1);
+INSERT INTO USUARIO_ROLES(usuario_id, roles_id) VALUES (1,2);
+INSERT INTO USUARIO_ROLES(usuario_id, roles_id) VALUES (2,2);
+INSERT INTO USUARIO_ROLES(usuario_id, roles_id) VALUES (3,3);
