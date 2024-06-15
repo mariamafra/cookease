@@ -1,5 +1,6 @@
 package com.br.acme.cookease.services;
 
+import com.br.acme.cookease.filters.ReceitaFilters;
 import com.br.acme.cookease.model.Receita;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface ReceitaService {
     void deleteById(Integer id);
     void save(Receita receita);
     Receita update(Integer id, Receita receitaAtualizada);
+
+    List<Receita> findWithFilters(ReceitaFilters filters);
 }
