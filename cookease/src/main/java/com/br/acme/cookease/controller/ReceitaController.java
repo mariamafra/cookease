@@ -1,8 +1,10 @@
 package com.br.acme.cookease.controller;
 
 import com.br.acme.cookease.exception.ResourceNotFoundException;
+import com.br.acme.cookease.model.Chefe;
 import com.br.acme.cookease.model.Receita;
 import com.br.acme.cookease.payload.MessagePayload;
+import com.br.acme.cookease.services.AuditService;
 import com.br.acme.cookease.services.ReceitaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ReceitaController {
     final ReceitaService receitaService;
+    final AuditService auditService;
 
     @Operation(summary = "Obtém todos as receitas ou filtra por nome")
     @ApiResponses(value = {
@@ -121,5 +124,17 @@ public class ReceitaController {
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessagePayload(ex.getMessage()));
         }
+    }
+
+    @Operation(summary = "Busca histórico de receita por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Histórico",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Receita[].class))})
+    })
+    @GetMapping("/history/{id}")
+    public ResponseEntity<List<Receita>> getReceitaHistory(@PathVariable int id) {
+        List<Receita> history = auditService.getReceitaHistory(id);
+        return ResponseEntity.ok(history);
     }
 }
