@@ -1,5 +1,6 @@
 package com.br.acme.cookease;
 
+import com.br.acme.cookease.filters.ReceitaFilters;
 import com.br.acme.cookease.model.Chefe;
 import com.br.acme.cookease.model.Receita;
 import com.br.acme.cookease.services.ReceitaService;
@@ -10,13 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Slf4j
 public class ReceitaServiceTests {
+
     @Autowired
     ReceitaService receitaService;
 
@@ -39,7 +41,7 @@ public class ReceitaServiceTests {
     }
 
     @Test
-    @DisplayName("Deve deletar um Receita do Banco.")
+    @DisplayName("Deve deletar uma Receita do Banco.")
     public void testarDelete() {
         Chefe chefe = Chefe.builder().id(1).build();
         Receita receita = new Receita();
@@ -59,22 +61,63 @@ public class ReceitaServiceTests {
     }
 
     @Test
-    @DisplayName("Deve retornar uma cerveja pelo ID")
+    @DisplayName("Deve retornar uma receita pelo ID")
     public void testarGetById() {
-//        Chefe chefe = Chefe.builder().id(1).build();
-//        Receita receita = new Receita();
-//        receita.setNome("Brownie da Duda");
-//        receita.setChefe(chefe);
-//        receitaService.save(receita);
-//
-//        List<Receita> all = receitaService.getAll();
-//        Receita receita2 = all.get(0);
-//        Optional<Receita> byId = receitaService.findById(receita2.getId());
-//        assertTrue(byId.isPresent());
-//
-//        Optional<Receita> inexistente = receitaService.findById(-1);
-//        assertTrue(inexistente.isEmpty());
-        Receita receita = receitaService.findById(1).get();
-        log.info("Receita" + receita);
+        Chefe chefe = Chefe.builder().id(1).build();
+        Receita receita = new Receita();
+        receita.setNome("Brownie da Duda");
+        receita.setChefe(chefe);
+        receitaService.save(receita);
+
+        List<Receita> all = receitaService.getAll();
+        Receita receita2 = all.get(0);
+        Optional<Receita> byId = receitaService.findById(receita2.getId());
+        assertTrue(byId.isPresent(), "Deveria ter encontrado uma receita com o ID existente.");
+
+        Optional<Receita> inexistente = receitaService.findById(-1);
+        assertTrue(inexistente.isEmpty(), "Não deveria ter encontrado uma receita com o ID inexistente.");
+
+        if (byId.isPresent()) {
+            Receita receita3 = byId.get();
+            log.info("Receita" + receita3);
+        }
     }
+
+    @Test
+    @DisplayName("Deve atualizar uma Receita no Banco.")
+    public void testarUpdate() {
+        Chefe chefe = Chefe.builder().id(1).build();
+        Receita receita = new Receita();
+        receita.setNome("Brownie da Duda");
+        receita.setChefe(chefe);
+        receitaService.save(receita);
+
+        String novoNome = "Brownie da Debora";
+        receita.setNome(novoNome);
+        receitaService.update(receita.getId(), receita);
+
+        Optional<Receita> receitaAtualizadaOpt = receitaService.findById(receita.getId());
+        assertTrue(receitaAtualizadaOpt.isPresent(), "A receita atualizada deveria estar presente no banco de dados.");
+
+        Receita receitaAtualizada = receitaAtualizadaOpt.get();
+        assertEquals(novoNome, receitaAtualizada.getNome(), "O nome da receita não foi atualizado corretamente.");
+    }
+
+    @Test
+    @DisplayName("Deve buscar Receitas com filtros.")
+    public void testarFindWithFilters() {
+        Chefe chefe = Chefe.builder().id(1).build();
+        Receita receita = new Receita();
+        receita.setNome("Brownie da Duda");
+        receita.setChefe(chefe);
+        receitaService.save(receita);
+
+        ReceitaFilters filters = ReceitaFilters.builder().nome(Optional.of("Brownie")).chefe(Optional.empty()).ingredientes(Optional.empty()).build();
+
+        List<Receita> receitasEncontradas = receitaService.findWithFilters(filters);
+
+        assertFalse(receitasEncontradas.isEmpty(), "Deveria ter encontrado pelo menos uma receita com os filtros.");
+        assertTrue(receitasEncontradas.stream().anyMatch(r -> r.getNome().equals(receita.getNome())), "A receita inicial não foi encontrada com os filtros.");
+    }
+
 }

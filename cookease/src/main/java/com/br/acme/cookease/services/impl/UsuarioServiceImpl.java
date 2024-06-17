@@ -31,6 +31,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<Usuario> findAllByRoles(List<Role> roles) {
-        return null; //usuarioRepository.findAllByRoles(roles);
+        return usuarioRepository.findAllByRoles(roles);
     }
 }
