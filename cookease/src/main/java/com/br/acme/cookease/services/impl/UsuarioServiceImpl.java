@@ -5,6 +5,7 @@ import com.br.acme.cookease.model.Usuario;
 import com.br.acme.cookease.repository.UsuarioRepository;
 import com.br.acme.cookease.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
+
+    @Autowired
     UsuarioRepository usuarioRepository;
 
     @Override

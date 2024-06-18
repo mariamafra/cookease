@@ -1,4 +1,4 @@
-package com.br.acme.cookease;
+package com.br.acme.cookease.service;
 
 import com.br.acme.cookease.model.Ingrediente;
 import com.br.acme.cookease.model.Receita;
