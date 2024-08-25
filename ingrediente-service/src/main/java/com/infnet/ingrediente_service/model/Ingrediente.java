@@ -16,5 +16,5 @@ public class Ingrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private Long chefeId;
+    private String nome;
 }
