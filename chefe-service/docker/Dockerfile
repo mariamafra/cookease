@@ -1,0 +1,5 @@
+FROM amazoncorretto:21
+LABEL author="cookease-team"
+WORKDIR /app
+COPY chefe-service-0.0.1-SNAPSHOT.jar /app/app.jar
+ENTRYPOINT  ["java", "-jar", "app.jar"]
