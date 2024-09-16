@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Entity
+@IdClass(ReceitaIngredienteId.class)
 @Table(name = "RECEITA_INGREDIENTE")
 public class ReceitaIngrediente {
     @Id

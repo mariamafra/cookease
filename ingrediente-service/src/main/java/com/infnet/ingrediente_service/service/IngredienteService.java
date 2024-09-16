@@ -11,5 +11,5 @@ public interface IngredienteService {
     Optional<Ingrediente> findById(Integer id);
     void deleteById(Integer id);
     void save(Ingrediente ingrediente);
-    Ingrediente update(Integer id, Ingrediente ingredienteAtualizada) throws Exception;
+    Ingrediente update(Integer id, Ingrediente ingredienteAtualizada);
 }
