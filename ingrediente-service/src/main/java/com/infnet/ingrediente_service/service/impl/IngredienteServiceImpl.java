@@ -3,6 +3,7 @@ package com.infnet.ingrediente_service.service.impl;
 import com.infnet.ingrediente_service.model.Ingrediente;
 import com.infnet.ingrediente_service.repository.IngredienteRepository;
 import com.infnet.ingrediente_service.service.IngredienteService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class IngredienteServiceImpl implements IngredienteService {
 
     @Override
     public void deleteById(Integer id) {
+        checkExistence(id);
         ingredienteRepository.deleteById(id);
     }
 
@@ -36,8 +38,15 @@ public class IngredienteServiceImpl implements IngredienteService {
     }
 
     @Override
-    public Ingrediente update(Integer id, Ingrediente ingredienteAtualizada) {
+    public Ingrediente update(Integer id, Ingrediente ingredienteAtualizada) throws Exception {
+        checkExistence(ingredienteAtualizada.getId());
         ingredienteAtualizada.setId(id);
         return ingredienteRepository.save(ingredienteAtualizada);
+    }
+
+    private void checkExistence(int id) {
+        if (!ingredienteRepository.existsById(id)) {
+            throw new EntityNotFoundException("Ingrediente não encontrado");
+        }
     }
 }
