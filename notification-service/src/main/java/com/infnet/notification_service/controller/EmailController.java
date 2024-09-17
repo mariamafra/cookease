@@ -19,11 +19,11 @@ public class EmailController {
     private EmailService emailService;
 
     @PostMapping("/send")
-    public String sendEmail(@RequestBody Email email, @RequestBody Usuario usuario) {
+    public String sendEmail() {
         try {
-            emailService.sendEmail(email, usuario);
+            emailService.sendRegistrationEmail();
             return "E-mail enviado com sucesso!";
-        } catch (MessagingException e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             return "Falha ao enviar o e-mail.";
         }

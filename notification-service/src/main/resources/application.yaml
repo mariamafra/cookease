@@ -3,6 +3,17 @@ app:
 server:
   port: ${app.myport}
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: newsapi.noreply@gmail.com
+    password: stwfmclgegfgfcck
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   main:
     allow-bean-definition-overriding: true
   datasource:
@@ -18,7 +29,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
   application:
-    name: ingrediente-service
+    name: notification-service
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
