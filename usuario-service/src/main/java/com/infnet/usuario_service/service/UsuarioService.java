@@ -12,7 +12,7 @@ public interface UsuarioService {
     List<Usuario> findAllByStatusList(List<Integer> status);
 //    List<Usuario> findAllByRoles(List<Role> roles);
     void deleteById(Long id);
-    void save(Usuario usuario);
+    void save(Usuario usuario) throws JsonProcessingException;
     Usuario update(Long id, Usuario usuarioAtualizado);
     Usuario adicionarRoleAoUsuario(String emailUsuario, String nomeRole);
     Usuario findByEmail(String email);

@@ -27,7 +27,8 @@ public class EmailService {
 
         mimeMessageHelper.setFrom("newsapi.noreply@gmail.com"); //e-mail que vai enviar.
         mimeMessageHelper.setTo(toEmail); //e-mail que vai receber.
-        mimeMessageHelper.setText(body, true);
+        mimeMessageHelper.setText(
+                "<h1>Bem-vindo!!!!</h1> <h3>Você acabou de chegar na melhor rede de receitas do mundo!!! O <strong style=\"color: red;\">COOKEASE</strong></h3>", true);
         mimeMessageHelper.setSubject(subject);
 
         mailSender.send(mimeMessage);

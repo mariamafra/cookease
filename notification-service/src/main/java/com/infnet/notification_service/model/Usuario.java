@@ -11,7 +11,7 @@ import java.util.Set;
 @Data
 @Builder
 @ToString
-public class Usuario implements Serializable {
+public class Usuario {
     private Long id;
     private String nome;
     private String email;

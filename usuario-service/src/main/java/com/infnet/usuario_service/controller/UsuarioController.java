@@ -71,8 +71,13 @@ public class UsuarioController {
     })
     @PostMapping("/cadastrar")
     public ResponseEntity<MessagePayload> save(@RequestBody Usuario usuario) {
-        usuarioService.save(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessagePayload("Criado com sucesso"));
+        try {
+            usuarioService.save(usuario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new MessagePayload("Criado com sucesso"));
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessagePayload(e.getMessage()));
+        }
+
     }
 
 
