@@ -90,7 +90,7 @@ public class IngredienteController {
             )
     })
     @PutMapping("/{id}")
-    public ResponseEntity<MessagePayload> update(@PathVariable Integer id, @RequestBody Ingrediente ingrediente) {
+    public ResponseEntity<MessagePayload> update(@PathVariable Integer id, @RequestBody Ingrediente ingrediente) throws Exception{
         try{
             ingredienteService.update(id, ingrediente);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessagePayload("Atualizado com sucesso"));

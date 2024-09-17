@@ -56,6 +56,7 @@ class IngredienteServiceImplTest {
 
     @Test
     void testDeleteById() {
+        when(ingredienteRepository.existsById(1)).thenReturn(true);
         ingredienteService.deleteById(1);
         verify(ingredienteRepository, times(1)).deleteById(1);
     }
@@ -68,8 +69,9 @@ class IngredienteServiceImplTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdate(){
         Ingrediente ingredienteAtualizada = new Ingrediente();
+        when(ingredienteRepository.existsById(ingredienteAtualizada.getId())).thenReturn(true);
         when(ingredienteRepository.save(ingredienteAtualizada)).thenReturn(ingredienteAtualizada);
 
         Ingrediente updatedIngrediente = ingredienteService.update(1, ingredienteAtualizada);

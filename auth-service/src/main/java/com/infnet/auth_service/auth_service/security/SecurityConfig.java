@@ -17,6 +17,14 @@ public class SecurityConfig  {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+//                        .requestMatchers("/auth/login").permitAll()  // Permite acesso público ao login
+//                        .anyRequest().authenticated()  // Exige autenticação para qualquer outra rota
+//                );
+//
+//        return http.build();
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest()
                         .permitAll())
                 .csrf(AbstractHttpConfigurer::disable);

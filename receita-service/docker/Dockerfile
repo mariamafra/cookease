@@ -1,5 +1,5 @@
 FROM amazoncorretto:21
-LABEL author="cookease-team"
+LABEL maintainer="joaofigueredo"
 WORKDIR /app
-COPY receita-service-0.0.1-SNAPSHOT.jar /app/app.jar
-ENTRYPOINT  ["java", "-jar", "app.jar"]
+COPY target/receita-service-0.0.1-SNAPSHOT.jar /app/app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
