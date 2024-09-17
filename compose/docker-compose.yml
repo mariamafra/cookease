@@ -15,7 +15,7 @@ services:
       context: ../eureka-service/docker
       dockerfile: Dockerfile
     container_name: EUREKA-SERVER
-    image: <seu_username_dockerhub>/eureka-service:latest
+    image: joaofigueredo/eureka-service:latest
     ports:
       - "8761:8761"
     networks:
@@ -24,13 +24,11 @@ services:
     build:
       context: ../chefe-service/docker
       dockerfile: Dockerfile
-    image: <seu_username_dockerhub>/chefe-service:latest
+    image: joaofigueredo/chefe-service:latest
     networks:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
-    ports:
-      - "8086:8086"
     depends_on:
       - eureka-service
   #      - mysql-cookease-network
@@ -38,58 +36,50 @@ services:
     build:
       context: ../ingrediente-service/docker
       dockerfile: Dockerfile
-    image: <seu_username_dockerhub>/ingrediente-service:latest
+    image: joaofigueredo/ingrediente-service:latest
     networks:
       -  cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
-    ports:
-      - "8085:8085"
     depends_on:
       - eureka-service
-    deploy:
-      replicas: 3
+#    deploy:
+#      replicas: 3
   receita-service:
     build:
       context: ../receita-service/docker
       dockerfile: Dockerfile
-    image: <seu_username_dockerhub>/receita-service:latest
+    image: joaofigueredo/receita-service:latest
     networks:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
-    ports:
-      - "8084:8084"
     depends_on:
       - eureka-service
-    deploy:
-      replicas: 5
+#    deploy:
+#      replicas: 5
   notification-service:
     build:
       context: ../notification-service/docker
       dockerfile: Dockerfile
-    image: <seu_username_dockerhub>/notification-service:latest
+    image: joaofigueredo/notification-service:latest
     networks:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
-    ports:
-      - "8083:8083"
     depends_on:
       - eureka-service
-    deploy:
-      replicas: 10
+#    deploy:
+#      replicas: 10
   usuario-service:
     build:
       context: ../usuario-service/docker
       dockerfile: Dockerfile
-    image: <seu_username_dockerhub>/usuario-service:latest
+    image: joaofigueredo/usuario-service:latest
     networks:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
-    ports:
-      - "8082:8082"
     depends_on:
       - eureka-service
       - auth-service
@@ -97,32 +87,24 @@ services:
     build:
       context: ../auth-service/docker
       dockerfile: Dockerfile
-    image: <seu_username_dockerhub>/auth-service:latest
+    image: joaofigueredo/auth-service:latest
     networks:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
-    ports:
-      - "8081:8081"
     depends_on:
       - eureka-service
   gateway:
     build:
       context: ../gateway/docker
       dockerfile: Dockerfile
-    image: <seu_username_dockerhub>/gateway:latest
+    image: joaofigueredo/gateway:latest
     ports:
       - "8080:8080"
     networks:
       - cookease-network
     depends_on:
-      - rabbitmq
       - eureka-service
-      - chefe-service
-      - ingrediente-service
-      - receita-service
-      - notification-service
-      - usuario-service
       - auth-service
 networks:
   cookease-network:
