@@ -4,12 +4,8 @@ services:
     container_name: RABBIT-SERVER
     networks:
       - cookease-network
-    ports:
-      - "5672:5672"   # Porta padrão do RabbitMQ
-      - "15672:15672" # Porta do painel de controle de gerenciamento do RabbitMQ
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   eureka-service:
     build:
       context: ../eureka-service/docker
@@ -20,6 +16,8 @@ services:
       - "8761:8761"
     networks:
       - cookease-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   chefe-service:
     build:
       context: ../chefe-service/docker
@@ -29,6 +27,8 @@ services:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - eureka-service
   #      - mysql-cookease-network
@@ -41,6 +41,8 @@ services:
       -  cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - eureka-service
 #    deploy:
@@ -54,6 +56,8 @@ services:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - eureka-service
 #    deploy:
@@ -67,8 +71,11 @@ services:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - eureka-service
+      - usuario-service
 #    deploy:
 #      replicas: 10
   usuario-service:
@@ -80,9 +87,10 @@ services:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - eureka-service
-      - auth-service
   auth-service:
     build:
       context: ../auth-service/docker
@@ -92,8 +100,11 @@ services:
       - cookease-network
     environment:
       EUREKA_SERVER_URL: http://eureka-service:8761/eureka/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - eureka-service
+      - usuario-service
   gateway:
     build:
       context: ../gateway/docker
@@ -103,9 +114,16 @@ services:
       - "8080:8080"
     networks:
       - cookease-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - eureka-service
       - auth-service
+      - chefe-service
+      - ingrediente-service
+      - notification-service
+      - receita-service
+      - usuario-service
 networks:
   cookease-network:
     driver: bridge
