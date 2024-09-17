@@ -1,5 +1,6 @@
 package com.infnet.usuario_service.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.infnet.usuario_service.exception.ResourceNotFoundException;
 import com.infnet.usuario_service.model.Usuario;
 import com.infnet.usuario_service.payload.MessagePayload;
@@ -139,5 +140,16 @@ public class UsuarioController {
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @PostMapping("/notificacao")
+    public ResponseEntity<Map<String, String>> notificar(@RequestBody Usuario usuario) {
+        try {
+            usuarioService.notificar(usuario);
+        } catch (JsonProcessingException e) {
+            ResponseEntity.internalServerError().build();
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok(Map.of("message", "Notificação emitida com sucesso"));
     }
 }
