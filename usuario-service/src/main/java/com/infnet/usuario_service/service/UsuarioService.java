@@ -14,4 +14,5 @@ public interface UsuarioService {
     void save(Usuario usuario);
     Usuario update(Long id, Usuario usuarioAtualizado);
     Usuario adicionarRoleAoUsuario(String emailUsuario, String nomeRole);
+    Usuario findByEmail(String email);
 }

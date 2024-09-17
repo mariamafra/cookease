@@ -5,6 +5,7 @@ import com.infnet.usuario_service.model.Usuario;
 import com.infnet.usuario_service.repository.RoleRepository;
 import com.infnet.usuario_service.service.UsuarioService;
 import com.infnet.usuario_service.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,5 +77,10 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.getRoles().add(role);
 
         return usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public Usuario findByEmail(String email) {
+        return usuarioRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 }

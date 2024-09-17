@@ -130,4 +130,14 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessagePayload(ex.getMessage()));
         }
     }
+
+    @GetMapping("email/{email}")
+    public ResponseEntity<Usuario> getByEmail(@PathVariable String email) {
+        try {
+            Usuario usuario = usuarioService.findByEmail(email);
+            return ResponseEntity.status(HttpStatus.OK).body(usuario);
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }

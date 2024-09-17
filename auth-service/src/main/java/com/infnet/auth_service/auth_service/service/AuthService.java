@@ -17,11 +17,7 @@ public class AuthService {
     @Autowired
     private TokenService tokenService;
 
-   /* @Autowired
-    private UsuarioClient usuarioClient;*/
-
     public String authenticateUser(String username, String password) {
-        // Autenticar o usuário
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         username,
@@ -30,8 +26,4 @@ public class AuthService {
         return tokenService.generateToken(authentication);
     }
 
-    private Usuario fetchUserDetailsFromUserService(String username) {
-        return new Usuario(1, "teste@terste.com", "senha", "user");
-       // return usuarioClient.getUserByEmail();
-    }
 }
