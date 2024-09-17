@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @FeignClient("USUARIO-SERVICE")
 public interface UsuarioClient {
-    @GetMapping("/email/{email}")
-    Usuario getByEmail(@PathVariable("email") String email);
+    @GetMapping("/usuarios/email/{email}")
+    Usuario getByEmail(@PathVariable String email);
 }

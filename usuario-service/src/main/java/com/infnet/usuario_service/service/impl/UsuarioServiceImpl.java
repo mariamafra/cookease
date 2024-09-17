@@ -1,5 +1,6 @@
 package com.infnet.usuario_service.service.impl;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.infnet.usuario_service.model.Role;
 import com.infnet.usuario_service.model.Usuario;
 import com.infnet.usuario_service.repository.RoleRepository;
@@ -50,9 +51,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public void save(Usuario usuario) {
-        usuarioRepository.save(usuario);
+        usuarioRepository.save(encode(usuario));
     }
 
+    private Usuario encode(Usuario usuario) {
+        String bcryptHashString = BCrypt.withDefaults().hashToString(10, usuario.getPassword().toCharArray());
+        usuario.setPassword(bcryptHashString);
+        return usuario;
+    }
     @Override
     public Usuario update(Long id, Usuario usuarioAtualizado) {
         usuarioAtualizado.setId(id);
