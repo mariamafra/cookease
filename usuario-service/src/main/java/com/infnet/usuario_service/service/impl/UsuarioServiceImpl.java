@@ -54,8 +54,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void save(Usuario usuario) {
+    public void save(Usuario usuario) throws JsonProcessingException {
         usuarioRepository.save(encode(usuario));
+        this.notificar(usuario);
     }
 
     private Usuario encode(Usuario usuario) {

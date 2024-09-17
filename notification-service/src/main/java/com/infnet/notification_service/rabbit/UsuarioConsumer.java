@@ -19,13 +19,13 @@ public class UsuarioConsumer {
     private final EmailService emailService;
 
     @RabbitListener(queues = {"chefe-criacao-queue"})
-    public Usuario receive(@Payload String json) {
+    public void receive(@Payload String json) {
         try {
             Usuario usuario = objectMapper.readValue(json, Usuario.class);
-            log.info("Notificação do", usuario);
+            log.info("Notificação do" + usuario);
             emailService.sendRegistrationEmail(usuario);
 
-            return usuario;
+            //return usuario;
         } catch (JsonProcessingException | MessagingException e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
