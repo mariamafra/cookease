@@ -39,8 +39,13 @@ public class IngredienteServiceImpl implements IngredienteService {
 
     @Override
     public Ingrediente update(Integer id, Ingrediente ingredienteAtualizada) {
-        ingredienteAtualizada.setId(id);
-        return ingredienteRepository.save(ingredienteAtualizada);
+        try {
+            checkExistence(ingredienteAtualizada.getId());
+            ingredienteAtualizada.setId(id);
+            return ingredienteRepository.save(ingredienteAtualizada);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void checkExistence(int id) {
