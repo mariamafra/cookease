@@ -68,7 +68,7 @@ public class UsuarioController {
                             schema = @Schema(implementation = MessagePayload.class))}
             )
     })
-    @PostMapping
+    @PostMapping("/cadastrar")
     public ResponseEntity<MessagePayload> save(@RequestBody Usuario usuario) {
         usuarioService.save(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessagePayload("Criado com sucesso"));

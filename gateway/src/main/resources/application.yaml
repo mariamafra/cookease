@@ -14,6 +14,30 @@ spring:
             - Path=/chefe/**
           filters:
             - AuthenticationFilter
+        - id: ingredientes
+          uri: lb://INGREDIENTE-SERVICE
+          predicates:
+            - Path=/ingrediente/**
+          filters:
+            - AuthenticationFilter
+        - id: notifications
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/email/**
+          filters:
+            - AuthenticationFilter
+        - id: receitas
+          uri: lb://RECEITA-SERVICE
+          predicates:
+            - Path=/receita/**
+          filters:
+            - AuthenticationFilter
+        - id: usuarios
+          uri: lb://USUARIO-SERVICE
+          predicates:
+            - Path=/usuarios/**
+          filters:
+            - AuthenticationFilter
 
   application:
     name: gateway-service
