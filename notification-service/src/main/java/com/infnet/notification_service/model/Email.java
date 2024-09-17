@@ -1,39 +1,14 @@
 package com.infnet.notification_service.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Email {
     private String to;
     private String subject;
     private String body;
-
-    // Construtores
-    public Email(String to, String subject, String body) {
-        this.to = to;
-        this.subject = subject;
-        this.body = body;
-    }
-
-    // Getters e Setters
-    public String getTo() {
-        return to;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
 }

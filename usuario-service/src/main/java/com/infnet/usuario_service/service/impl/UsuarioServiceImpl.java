@@ -1,8 +1,10 @@
 package com.infnet.usuario_service.service.impl;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.infnet.usuario_service.model.Role;
 import com.infnet.usuario_service.model.Usuario;
+import com.infnet.usuario_service.rabbitmq.UsuarioProducer;
 import com.infnet.usuario_service.repository.RoleRepository;
 import com.infnet.usuario_service.service.UsuarioService;
 import com.infnet.usuario_service.repository.UsuarioRepository;
@@ -23,6 +25,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    private final UsuarioProducer producer;
 
     @Override
     public List<Usuario> getAll() {
@@ -88,5 +92,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario findByEmail(String email) {
         return usuarioRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+    }
+
+
+    public void notificar(Usuario usuario) throws JsonProcessingException {
+        producer.send(usuario);
     }
 }
